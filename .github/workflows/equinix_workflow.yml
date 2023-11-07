@@ -3,6 +3,8 @@ name: 'equinix-metal-actions-example'
 on:
   workflow_dispatch:
 
+
+
 jobs:
   project:
     runs-on: ubuntu-latest
@@ -12,6 +14,8 @@ jobs:
       uses: equinix-labs/metal-project-action@main
       with:
         userToken: ${{ secrets.METAL_AUTH_TOKEN }}
+        projectName: gsproject
+        organizationID: saravanan-org
     - name: Use the Project SSH Key outputs (display it)
       run: |
         echo $PROJECT_PRIVATE_SSH_KEY

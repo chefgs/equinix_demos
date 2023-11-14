@@ -35,13 +35,13 @@ jobs:
       uses: equinix-labs/metal-device-action@main
       continue-on-error: true
       with:
-        metal_auth_token: $PROJECT_TOKEN
-        metal_project_id: $PROJECT_ID
+        metal_auth_token: ${{ env.PROJECT_TOKEN }}
+        metal_project_id: ${{ env.PROJECT_ID }}
         metro: da
         plan: m3.small.x86
         os: ubuntu_22_04
     - name: Delete temporary project & device
       uses: equinix-labs/metal-sweeper-action@main
       with:
-        authToken: $PROJECT_TOKEN
-        projectID: $PROJECT_ID
+        authToken: ${{ env.PROJECT_TOKEN }}
+        projectID: ${{ env.PROJECT_ID }}

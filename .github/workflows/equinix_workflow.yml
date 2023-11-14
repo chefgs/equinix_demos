@@ -3,7 +3,9 @@ name: 'equinix-metal-actions-example'
 on:
   workflow_dispatch:
 
-
+env:
+  PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
+  PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
 
 jobs:
   project:
@@ -33,13 +35,13 @@ jobs:
       uses: equinix-labs/metal-device-action@main
       continue-on-error: true
       with:
-        metal_auth_token: ${{ steps.metal-project.outputs.projectToken }}
-        metal_project_id: ${{ steps.metal-project.outputs.projectID }}
+        metal_auth_token: $PROJECT_TOKEN
+        metal_project_id: $PROJECT_ID
         metro: da
         plan: m3.small.x86
         os: ubuntu_22_04
     - name: Delete temporary project & device
       uses: equinix-labs/metal-sweeper-action@main
       with:
-        authToken: ${{ secrets.METAL_AUTH_TOKEN }}
-        projectID: ${{ steps.metal-project.outputs.projectID }}
+        authToken: $PROJECT_TOKEN
+        projectID: $PROJECT_ID

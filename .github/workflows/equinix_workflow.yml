@@ -31,7 +31,7 @@ jobs:
 #      env:
 #        PROJECT_ID: ${{ steps.metal-project.outputs.projectID }}
 #        PROJECT_NAME: ${{ steps.metal-project.outputs.projectName }}
-    - name: Create device in temporary project
+    - name: Create metal device in project
       uses: equinix-labs/metal-device-action@main
       continue-on-error: true
       with:
@@ -40,6 +40,9 @@ jobs:
         metro: da
         plan: m3.small.x86
         os: ubuntu_22_04
+#   - name: SSH into metal device
+#   runs-on - metal instance
+#   Checkout code into metal instance
     - name: Delete temporary project & device
       uses: equinix-labs/metal-sweeper-action@main
       with:

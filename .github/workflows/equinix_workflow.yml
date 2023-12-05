@@ -36,7 +36,7 @@ jobs:
         ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
         ssh_pub_key=`cat ~/.ssh/id_rsa.pub`
         echo "ssh pub key: $ssh_pub_key"
-        curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" -d '{"label": "my machine ssh key","key": "$ssh_pub_key"}'
+        curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" -d '{"label": "runner ssh key","key": "\"$ssh_pub_key\""}'
 
     - name: Create metal device in project
       id: metal-device

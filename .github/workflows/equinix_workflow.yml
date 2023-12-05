@@ -53,7 +53,7 @@ jobs:
     - name: Add metal device ssh key to gh workflow instance
       run: |
         mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
-        curl -X GET -H "X-Auth-Token: ${{ secrets.METAL_AUTH_TOKEN }}" "https://api.equinix.com/metal/v1/devices/{id}/ssh-keys" >  ~/.ssh/authorized_keys
+        curl -X GET -H "X-Auth-Token: ${{ secrets.METAL_AUTH_TOKEN }}" "https://api.equinix.com/metal/v1/devices/${{ steps.metal-device.outputs.serverid }}/ssh-keys" >  ~/.ssh/authorized_keys
         chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
         cat ~/.ssh/authorized_keys
         ssh  root@${{ steps.metal-device.outputs.ipaddress }}

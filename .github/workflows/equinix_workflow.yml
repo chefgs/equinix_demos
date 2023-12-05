@@ -32,6 +32,12 @@ jobs:
 #      env:
 #        PROJECT_ID: ${{ steps.metal-project.outputs.projectID }}
 #        PROJECT_NAME: ${{ steps.metal-project.outputs.projectName }}
+    - name: Create SSH key and Add to Equnix Project
+      run: |
+        ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
+        ssh_pub_key=`cat ~/.ssh/id_rsa.pub`
+        curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" -d '{"label": "my machine ssh key","key": "$ssh_pub_key"}'
+
     - name: Create metal device in project
       id: metal-device
       uses: equinix-labs/metal-device-action@main
@@ -44,19 +50,18 @@ jobs:
         os: ubuntu_22_04
         user_data: |
             #!/bin/bash
-            echo 'Hello, Equinix Metal! \
-            This is my IP ${{ steps.metal-device.outputs.ipaddress }}'
-            ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
-            echo 'cat ~/.ssh/id_rsa.pub'
-            ssh_pub_key=`cat ~/.ssh/id_rsa.pub`
-            curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/ssh-keys" -d '{"label": "my machine ssh key","key": "$ssh_pub_key"}'
+            echo 'Hello, Equinix Metal!'
+#            ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
+#            echo 'cat ~/.ssh/id_rsa.pub'
+#            ssh_pub_key=`cat ~/.ssh/id_rsa.pub`
+#            curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/ssh-keys" -d '{"label": "my machine ssh key","key": "$ssh_pub_key"}'
     - name: Add metal device ssh key to gh workflow instance
       run: |
         mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
-        curl -X GET -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/devices/${{ steps.metal-device.outputs.serverid }}/ssh-keys" >  ~/.ssh/authorized_keys
+        curl -X GET -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" >  ~/.ssh/authorized_keys
         chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
         cat ~/.ssh/authorized_keys
-        ssh  root@${{ steps.metal-device.outputs.ipaddress }}
+        ssh root@${{ steps.metal-device.outputs.ipaddress }}
 #    - name: SSH into metal device
 #      uses: D3rHase/ssh-command-action@v0.2.2
 #      with:

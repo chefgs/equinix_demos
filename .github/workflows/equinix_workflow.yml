@@ -33,10 +33,13 @@ jobs:
 #        PROJECT_NAME: ${{ steps.metal-project.outputs.projectName }}
     - name: Create SSH key and Add to Equnix Project
       run: |
+        sudo apt update
+        sudo apt install -y jq
+        jq --version
         ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
-        ssh_pub_key=`cat ~/.ssh/id_rsa.pub`
-        echo "ssh pub key: $ssh_pub_key"
-        curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" -d '{"label": "runner ssh key","key": "\"$ssh_pub_key\""}'
+        ${{ vars.SSH_PUB_KEY }}=`cat ~/.ssh/id_rsa.pub`
+        echo "ssh pub key: ${{ vars.SSH_PUB_KEY }}"
+        curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" -d '{"label": "runner ssh key","key": "${{ vars.SSH_PUB_KEY }}"}'
 
     - name: Create metal device in project
       id: metal-device

@@ -11,11 +11,11 @@ jobs:
   project:
     runs-on: ubuntu-latest
     steps:
-#    - name: Create temporary project
-#      id: metal-project
-#      uses: equinix-labs/metal-project-action@main
-#      with:
-#        userToken: ${{ secrets.METAL_AUTH_TOKEN }}
+    - name: Create temporary project
+      id: metal-project
+      uses: equinix-labs/metal-project-action@main
+      with:
+        userToken: ${{ secrets.METAL_AUTH_TOKEN }}
 #        projectName: gsproject
 #        organizationID: saravanan-org
 #    - name: Use the Project SSH Key outputs (display it)
@@ -32,6 +32,7 @@ jobs:
 #        PROJECT_ID: ${{ steps.metal-project.outputs.projectID }}
 #        PROJECT_NAME: ${{ steps.metal-project.outputs.projectName }}
     - name: Create metal device in project
+      id: metal-device
       uses: equinix-labs/metal-device-action@main
       continue-on-error: true
       with:
@@ -40,9 +41,14 @@ jobs:
         metro: da
         plan: m3.small.x86
         os: ubuntu_22_04
-#   - name: SSH into metal device
-#   runs-on - metal instance
-#   Checkout code into metal instance
+    - name: SSH into metal device
+      uses: D3rHase/ssh-command-action@v0.2.2
+      with:
+        # hostname / IP of the server
+        host: ${{ steps.metal-device.outputs.ipaddress }}
+        # private ssh key registered on the server
+        private_key: ${{ steps.metal-project.outputs.projectSSHPrivateKeyBase64 }}
+
     - name: Delete temporary project & device
       uses: equinix-labs/metal-sweeper-action@main
       with:

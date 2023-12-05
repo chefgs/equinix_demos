@@ -11,11 +11,11 @@ jobs:
   project:
     runs-on: ubuntu-latest
     steps:
-    - name: Create temporary project
-      id: metal-project
-      uses: equinix-labs/metal-project-action@main
-      with:
-        userToken: ${{ secrets.METAL_AUTH_TOKEN }}
+#    - name: Create temporary project
+#      id: metal-project
+#      uses: equinix-labs/metal-project-action@main
+#      with:
+#        userToken: ${{ secrets.METAL_AUTH_TOKEN }}
 #        projectName: gsproject
 #        organizationID: saravanan-org
 #    - name: Use the Project SSH Key outputs (display it)
@@ -41,6 +41,10 @@ jobs:
         metro: da
         plan: m3.small.x86
         os: ubuntu_22_04
+        user_data: |
+            #!/bin/bash
+            echo 'Hello, Equinix Metal! \
+            This is my IP ${{ steps.metal-device.outputs.ipaddress }}'
     - name: SSH into metal device
       uses: D3rHase/ssh-command-action@v0.2.2
       with:

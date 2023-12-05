@@ -6,6 +6,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
   PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
+  METAL_SSH_PUBKEY: ""
 
 jobs:
   project:
@@ -45,11 +46,22 @@ jobs:
             #!/bin/bash
             echo 'Hello, Equinix Metal! \
             This is my IP ${{ steps.metal-device.outputs.ipaddress }}'
-    - name: SSH into metal device
-      uses: D3rHase/ssh-command-action@v0.2.2
-      with:
-        # hostname / IP of the server
-        host: ${{ steps.metal-device.outputs.ipaddress }}
+            ssh-keygen -q -t rsa -N 'meTal' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
+            echo 'cat ~/.ssh/id_rsa.pub'
+            ${{ env.METAL_SSH_PUBKEY }}=`cat ~/.ssh/id_rsa.pub` 
+            echo '${{ env.METAL_SSH_PUBKEY }}'
+    - name: Add metal device ssh key to gh workflow instance
+      run: |
+        mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
+        echo '${{ env.METAL_SSH_PUBKEY }}' >  ~/.ssh/authorized_keys
+        chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
+        cat ~/.ssh/authorized_keys
+        ssh 
+#    - name: SSH into metal device
+#      uses: D3rHase/ssh-command-action@v0.2.2
+#      with:
+#        # hostname / IP of the server
+#        host: ${{ steps.metal-device.outputs.ipaddress }}
 #        # private ssh key registered on the server
 #        private_key: ${{ steps.metal-project.outputs.projectSSHPrivateKeyBase64 }}
 

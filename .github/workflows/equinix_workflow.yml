@@ -46,17 +46,17 @@ jobs:
             #!/bin/bash
             echo 'Hello, Equinix Metal! \
             This is my IP ${{ steps.metal-device.outputs.ipaddress }}'
-            ssh-keygen -q -t rsa -N 'meTal' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
+            ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
             echo 'cat ~/.ssh/id_rsa.pub'
-            ${{ env.METAL_SSH_PUBKEY }}=`cat ~/.ssh/id_rsa.pub` 
-            echo '${{ env.METAL_SSH_PUBKEY }}'
+            ssh_pub_key=`cat ~/.ssh/id_rsa.pub`
+            curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ secrets.METAL_AUTH_TOKEN }}" "https://api.equinix.com/metal/v1/ssh-keys" -d '{"label": "my machine ssh key","key": "$ssh_pub_key"}'
     - name: Add metal device ssh key to gh workflow instance
       run: |
         mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
-        echo '${{ env.METAL_SSH_PUBKEY }}' >  ~/.ssh/authorized_keys
+        curl -X GET -H "X-Auth-Token: ${{ secrets.METAL_AUTH_TOKEN }}" "https://api.equinix.com/metal/v1/devices/{id}/ssh-keys" >  ~/.ssh/authorized_keys
         chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
         cat ~/.ssh/authorized_keys
-        ssh 
+        ssh  root@${{ steps.metal-device.outputs.ipaddress }}
 #    - name: SSH into metal device
 #      uses: D3rHase/ssh-command-action@v0.2.2
 #      with:

@@ -49,11 +49,11 @@ jobs:
             ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
             echo 'cat ~/.ssh/id_rsa.pub'
             ssh_pub_key=`cat ~/.ssh/id_rsa.pub`
-            curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ secrets.METAL_AUTH_TOKEN }}" "https://api.equinix.com/metal/v1/ssh-keys" -d '{"label": "my machine ssh key","key": "$ssh_pub_key"}'
+            curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/ssh-keys" -d '{"label": "my machine ssh key","key": "$ssh_pub_key"}'
     - name: Add metal device ssh key to gh workflow instance
       run: |
         mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
-        curl -X GET -H "X-Auth-Token: ${{ secrets.METAL_AUTH_TOKEN }}" "https://api.equinix.com/metal/v1/devices/${{ steps.metal-device.outputs.serverid }}/ssh-keys" >  ~/.ssh/authorized_keys
+        curl -X GET -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/devices/${{ steps.metal-device.outputs.serverid }}/ssh-keys" >  ~/.ssh/authorized_keys
         chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
         cat ~/.ssh/authorized_keys
         ssh  root@${{ steps.metal-device.outputs.ipaddress }}

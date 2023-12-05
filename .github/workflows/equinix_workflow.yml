@@ -31,33 +31,26 @@ jobs:
 #      env:
 #        PROJECT_ID: ${{ steps.metal-project.outputs.projectID }}
 #        PROJECT_NAME: ${{ steps.metal-project.outputs.projectName }}
-    - name: Create SSH key and Add to Equnix Project
-      run: |
-        sudo apt update
-        sudo apt install -y jq
-        jq --version
-        ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
-        ${{ vars.SSH_PUB_KEY }}=`cat ~/.ssh/id_rsa.pub`
-        echo "ssh pub key: ${{ vars.SSH_PUB_KEY }}"
-        curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" -d '{"label": "runner ssh key","key": "${{ vars.SSH_PUB_KEY }}"}'
+#    - name: Create SSH key and Add to Equnix Project
+#      run: |
+#        ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
+#        ${{ vars.SSH_PUB_KEY }}=`cat ~/.ssh/id_rsa.pub`
+#        echo "ssh pub key: ${{ vars.SSH_PUB_KEY }}"
+#        curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" -d '{"label": "runner ssh key","key": "${{ vars.SSH_PUB_KEY }}"}'
 
     - name: Create metal device in project
       id: metal-device
       uses: equinix-labs/metal-device-action@main
       continue-on-error: true
       with:
-#        metal_auth_token: ${{ env.PROJECT_TOKEN }}
-#        metal_project_id: ${{ env.PROJECT_ID }}
-#        metro: da
-#        plan: m3.small.x86
+        metal_auth_token: ${{ env.PROJECT_TOKEN }}
+        metal_project_id: ${{ env.PROJECT_ID }}
+        metro: da
+        plan: m3.small.x86
         os: ubuntu_22_04
         user_data: |
             #!/bin/bash
             echo 'Hello, Equinix Metal!'
-#            ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
-#            echo 'cat ~/.ssh/id_rsa.pub'
-#            ssh_pub_key=`cat ~/.ssh/id_rsa.pub`
-#            curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/ssh-keys" -d '{"label": "my machine ssh key","key": "$ssh_pub_key"}'
     - name: Add metal device ssh key to gh workflow instance
       run: |
         mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys

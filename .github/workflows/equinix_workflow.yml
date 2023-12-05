@@ -50,8 +50,8 @@ jobs:
       with:
         # hostname / IP of the server
         host: ${{ steps.metal-device.outputs.ipaddress }}
-        # private ssh key registered on the server
-        private_key: ${{ steps.metal-project.outputs.projectSSHPrivateKeyBase64 }}
+#        # private ssh key registered on the server
+#        private_key: ${{ steps.metal-project.outputs.projectSSHPrivateKeyBase64 }}
 
     - name: Delete temporary project & device
       uses: equinix-labs/metal-sweeper-action@main

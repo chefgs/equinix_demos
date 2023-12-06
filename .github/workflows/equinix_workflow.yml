@@ -1,4 +1,17 @@
-name: 'equinix-metal-actions-example'
+# In this Demo Github actions workflow, we will create a metal instance in existing project
+# Access the metal instance from Github runner and display the cloud-init logs
+# To perform this action, we need to create a project in Equinix Metal and add the runner ssh key to the project
+# Once the runner ssh key is added to the project, the newly created metal instance will be having the runner ssh key
+# So we will be able to access the metal instance and can see the cloud-init logs
+# Once the demo is completed, we can delete the project and all the resources will be deleted
+# This demo is using the following Github actions
+# equinix-labs/metal-device-action@main
+# equinix-labs/metal-sweeper-action@main
+
+# In this demo we also used `jq` command to parse the SSH public key into curl command
+# We need to pass "-n --arg" to jq command to parse the SSH public key
+
+name: 'Equinix-Metal-Actions-Demo'
 
 on:
   workflow_dispatch:
@@ -31,7 +44,7 @@ jobs:
 #      env:
 #        PROJECT_ID: ${{ steps.metal-project.outputs.projectID }}
 #        PROJECT_NAME: ${{ steps.metal-project.outputs.projectName }}
-    - name: Create SSH key and Add to Equinix Project
+    - name: Create Runner SSH key and Add to Equinix Project
       run: |
         sudo apt update
         sudo apt install jq -y
@@ -45,7 +58,7 @@ jobs:
 
         curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" -d "$jq_out"
 
-    - name: Create metal device in project
+    - name: Create Metal Device in Project
       id: metal-device
       uses: equinix-labs/metal-device-action@main
       continue-on-error: true
@@ -59,29 +72,17 @@ jobs:
             #!/bin/bash
             echo 'Hello, Equinix Metal!'
 
-    - name: SSH into metal device and Display CloudInit logs
+    - name: SSH into Metal Device and Display CloudInit Logs
       run: |
-        mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
-        # curl -X GET -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" >  ~/.ssh/authorized_keys
-        # echo ${{ env.SSH_PUB_KEY }} > ~/.ssh/authorized_keys
-        chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
-        cat ~/.ssh/authorized_keys
         ssh -o StrictHostKeyChecking=no -tt root@${{ steps.metal-device.outputs.ipaddress }} 'sudo cat /var/log/cloud-init-output.log; exit'
-#    - name: SSH into metal device
-#      uses: D3rHase/ssh-command-action@v0.2.2
-#      with:
-#        # hostname / IP of the server
-#        host: ${{ steps.metal-device.outputs.ipaddress }}
-#        # private ssh key registered on the server
-#        private_key: ${{ steps.metal-project.outputs.projectSSHPrivateKeyBase64 }}
 
   destroy-metal-resources:
     needs: manage-metal-resources
     runs-on: ubuntu-latest
     steps:
-      - name: Delete temporary project & device
+      - name: Cleanup the Device
         uses: equinix-labs/metal-sweeper-action@main
         with:
           authToken: ${{ env.PROJECT_TOKEN }}
           projectID: ${{ env.PROJECT_ID }}
-          keepProject: true
+          keepProject: true # Set to false to delete the project

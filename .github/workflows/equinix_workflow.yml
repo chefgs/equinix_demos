@@ -31,7 +31,7 @@ jobs:
 #      env:
 #        PROJECT_ID: ${{ steps.metal-project.outputs.projectID }}
 #        PROJECT_NAME: ${{ steps.metal-project.outputs.projectName }}
-    - name: Create SSH key and Add to Equnix Project
+    - name: Create SSH key and Add to Equinix Project
       run: |
         sudo apt update
         sudo apt install jq -y
@@ -63,7 +63,7 @@ jobs:
       run: |
         mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
         # curl -X GET -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" >  ~/.ssh/authorized_keys
-        echo ${{ env.SSH_PUB_KEY }} > ~/.ssh/authorized_keys
+        # echo ${{ env.SSH_PUB_KEY }} > ~/.ssh/authorized_keys
         chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
         cat ~/.ssh/authorized_keys
         ssh -o StrictHostKeyChecking=no -tt root@${{ steps.metal-device.outputs.ipaddress }}

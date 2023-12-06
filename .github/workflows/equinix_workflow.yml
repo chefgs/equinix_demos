@@ -8,7 +8,7 @@ env:
   PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
 
 jobs:
-  project:
+  manage-metal-resources:
     runs-on: ubuntu-latest
     steps:
 #    - name: Create temporary project
@@ -56,7 +56,7 @@ jobs:
       run: |
         mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
         # curl -X GET -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" >  ~/.ssh/authorized_keys
-        echo ${{ secrets.SSH_PUB_KEY }} > ~/.ssh/authorized_keys
+        echo ${{ env.SSH_PUB_KEY }} > ~/.ssh/authorized_keys
         chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
         cat ~/.ssh/authorized_keys
         ssh -o StrictHostKeyChecking=no -tt root@${{ steps.metal-device.outputs.ipaddress }}
@@ -68,10 +68,13 @@ jobs:
 #        # private ssh key registered on the server
 #        private_key: ${{ steps.metal-project.outputs.projectSSHPrivateKeyBase64 }}
 
+  destroy-metal-resources:
+    needs: manage-metal-resources
+    runs-on: ubuntu-latest
     steps:
-    - name: Delete temporary project & device
-      uses: equinix-labs/metal-sweeper-action@main
-      with:
-        authToken: ${{ env.PROJECT_TOKEN }}
-        projectID: ${{ env.PROJECT_ID }}
-        keepProject: true
+      - name: Delete temporary project & device
+        uses: equinix-labs/metal-sweeper-action@main
+        with:
+          authToken: ${{ env.PROJECT_TOKEN }}
+          projectID: ${{ env.PROJECT_ID }}
+          keepProject: true

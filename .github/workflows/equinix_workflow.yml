@@ -59,14 +59,14 @@ jobs:
             #!/bin/bash
             echo 'Hello, Equinix Metal!'
 
-    - name: Add metal device ssh key to gh workflow instance
+    - name: SSH into metal device and Display CloudInit logs
       run: |
         mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
         # curl -X GET -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" >  ~/.ssh/authorized_keys
         # echo ${{ env.SSH_PUB_KEY }} > ~/.ssh/authorized_keys
         chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
         cat ~/.ssh/authorized_keys
-        ssh -o StrictHostKeyChecking=no -tt root@${{ steps.metal-device.outputs.ipaddress }}
+        ssh -o StrictHostKeyChecking=no -tt root@${{ steps.metal-device.outputs.ipaddress }} 'sudo cat /var/log/cloud-init-output.log; exit'
 #    - name: SSH into metal device
 #      uses: D3rHase/ssh-command-action@v0.2.2
 #      with:

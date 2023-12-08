@@ -7,10 +7,10 @@ on:
           description: 'Metal Project ID'     
           required: true
           default: 'dummy_project_id'
-        PROJECT_TOKEN:
-            description: 'Metal Project Token'     
-            required: true
-            default: 'dummy_project_token'
+#        PROJECT_TOKEN:
+#            description: 'Metal Project Token'     
+#            required: true
+#            default: 'dummy_project_token'
         Delete_Project:
             description: 'Delete the Project'     
             required: true

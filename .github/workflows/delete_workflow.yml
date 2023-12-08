@@ -11,7 +11,7 @@ on:
 #            description: 'Metal Project Token'     
 #            required: true
 #            default: 'dummy_project_token'
-        Delete_Project:
+        Keep_Project:
             description: 'Delete the Project'     
             required: true
             default: 'false'
@@ -29,4 +29,4 @@ jobs:
         with:
           authToken: ${{ secrets.METAL_AUTH_TOKEN }}
           projectID: ${{ github.event.inputs.PROJECT_ID }}
-          keepProject: ${{ github.event.inputs.Delete_Project }} # Set to false to delete the project
+          keepProject: ${{ github.event.inputs.Keep_Project }} # Set to false to delete the project

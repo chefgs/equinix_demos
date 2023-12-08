@@ -12,7 +12,7 @@ on:
 #            required: true
 #            default: 'dummy_project_token'
         Keep_Project:
-            description: 'Delete the Project'     
+            description: 'Keep the Project'     
             required: true
             default: 'false'
 

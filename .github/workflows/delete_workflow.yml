@@ -11,6 +11,10 @@ on:
             description: 'Metal Project Token'     
             required: true
             default: 'dummy_project_token'
+        Delete_Project:
+            description: 'Delete the Project'     
+            required: true
+            default: 'false'
 
 # env:
 #  PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
@@ -23,6 +27,6 @@ jobs:
       - name: Cleanup the Device
         uses: equinix-labs/metal-sweeper-action@main
         with:
-          authToken: ${{ env.PROJECT_TOKEN }}
+          authToken: ${{ secrets.METAL_AUTH_TOKEN }}
           projectID: ${{ env.PROJECT_ID }}
-          keepProject: false # Set to false to delete the project
+          keepProject: ${{ github.event.inputs.Delete_Project }} # Set to false to delete the project

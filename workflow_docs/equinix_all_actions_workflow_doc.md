@@ -1,3 +1,6 @@
+# Equinix All GitHub Actions Demos
+
+[![Equinix-Metal-All_GHActions-Demo](https://github.com/chefgs/equinix_demos/actions/workflows/equinix_all_actions_workflow.yml/badge.svg?branch=main)](https://github.com/chefgs/equinix_demos/actions/workflows/equinix_all_actions_workflow.yml)
 
 ## Objective of this Workflow
 The provided code is a part of a GitHub Actions workflow that manages resources on Equinix Metal.

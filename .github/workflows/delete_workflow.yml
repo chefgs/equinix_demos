@@ -28,5 +28,5 @@ jobs:
         uses: equinix-labs/metal-sweeper-action@main
         with:
           authToken: ${{ secrets.METAL_AUTH_TOKEN }}
-          projectID: ${{ env.PROJECT_ID }}
+          projectID: ${{ github.event.inputs.PROJECT_ID }}
           keepProject: ${{ github.event.inputs.Delete_Project }} # Set to false to delete the project

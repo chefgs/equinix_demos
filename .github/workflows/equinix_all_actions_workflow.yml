@@ -55,6 +55,9 @@ jobs:
         metro: da
         plan: m3.small.x86
         os: ubuntu_22_04
+        user_data: |
+          #!/bin/bash
+          echo 'Hello, Equinix Metal!'
     - name: SSH into Metal Device and Display CloudInit Logs
       run: |
         ssh -o StrictHostKeyChecking=no -tt root@$${{ steps.metal-device.outputs.ipaddress }} 'sudo cat /var/log/cloud-init-output.log && exit'

@@ -1,0 +1,28 @@
+name: 'Equinix-Metal-Actions-Demo'
+
+on:
+  workflow_dispatch:
+    inputs:
+        PROJECT_ID:
+          description: 'Metal Project ID'     
+          required: true
+          default: 'dummy_project_id'
+        PROJECT_TOKEN:
+            description: 'Metal Project Token'     
+            required: true
+            default: 'dummy_project_token'
+
+# env:
+#  PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
+#  PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
+
+jobs:
+  destroy-metal-resources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup the Device
+        uses: equinix-labs/metal-sweeper-action@main
+        with:
+          authToken: ${{ env.PROJECT_TOKEN }}
+          projectID: ${{ env.PROJECT_ID }}
+          keepProject: false # Set to false to delete the project

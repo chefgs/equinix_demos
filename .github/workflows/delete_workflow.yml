@@ -24,7 +24,7 @@ jobs:
   destroy-metal-resources:
     runs-on: ubuntu-latest
     steps:
-      - name: Cleanup the Device
+      - name: Device and Project Cleanup
         uses: equinix-labs/metal-sweeper-action@main
         with:
           authToken: ${{ secrets.METAL_AUTH_TOKEN }}

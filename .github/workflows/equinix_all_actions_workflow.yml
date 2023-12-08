@@ -4,7 +4,7 @@
 # Finally delete the project and device. 
 
 # The workflow is triggered manually using the workflow_dispatch event.
-name: 'Equinix-Metal-Actions-All-Demo'
+name: 'Equinix-Metal-All-Actions-Demo'
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: 'Equinix-Metal-Actions-Demo'
+name: 'Equinix-Metal-Delete-Action'
 
 on:
   workflow_dispatch:

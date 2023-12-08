@@ -32,6 +32,7 @@ jobs:
         PROJECT_ID: ${{ steps.metal-project.outputs.projectID }}
         PROJECT_NAME: ${{ steps.metal-project.outputs.projectName }}
     - name: Create device in temporary project
+      id: metal-device
       uses: equinix-labs/metal-device-action@main
       continue-on-error: true
       with:
@@ -42,7 +43,7 @@ jobs:
         os: ubuntu_22_04
     - name: SSH into Metal Device and Display CloudInit Logs
       run: |
-        ssh -o StrictHostKeyChecking=no -i <(echo "$PROJECT_PRIVATE_SSH_KEY") root@${{ steps.metal-device.outputs.devicePublicIPv4 }} 'cat /var/log/cloud-init-output.log && exit'
+        ssh -o StrictHostKeyChecking=no -tt -i <(echo "$PROJECT_PRIVATE_SSH_KEY") root@$${{ steps.metal-device.outputs.ipaddress }} 'sudo cat /var/log/cloud-init-output.log && exit'
       env:
         PROJECT_PRIVATE_SSH_KEY: ${{ steps.metal-project.outputs.projectSSHPrivateKeyBase64 }}
     - name: Delete temporary project & device

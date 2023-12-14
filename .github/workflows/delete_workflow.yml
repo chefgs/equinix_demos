@@ -7,18 +7,11 @@ on:
           description: 'Metal Project ID'     
           required: true
           default: 'dummy_project_id'
-#        PROJECT_TOKEN:
-#            description: 'Metal Project Token'     
-#            required: true
-#            default: 'dummy_project_token'
+
         Keep_Project:
             description: 'Keep the Project'     
             required: true
             default: 'false'
-
-# env:
-#  PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
-#  PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
 
 jobs:
   destroy-metal-resources:

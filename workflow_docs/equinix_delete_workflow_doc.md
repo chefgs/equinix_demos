@@ -12,17 +12,16 @@ The provided code is a GitHub Actions workflow named 'Equinix-Metal-Delete-Actio
 
 ## Workflow explanation
 - The workflow_dispatch event has two inputs: `PROJECT_ID` and `Keep_Project`. 
-  - `PROJECT_ID` is the ID of the Equinix Metal project that you want to manage, and Keep_Project is a boolean value that determines whether the project should be kept or deleted. 
+  - `PROJECT_ID` is the ID of the Equinix Metal project that you want to manage, and `Keep_Project` is a boolean value that determines whether the project should be kept or deleted. 
   - Both inputs are required and have default values.
-
 
 - Job: The workflow consists of a single job named `destroy-metal-resources`, which runs on the latest version of Ubuntu. This job has one step: `"Device and Project Cleanup"`.
 
 - Job Step: `"Device and Project Cleanup"`.
   - In the "`Device and Project Cleanup`" step, the `equinix-labs/metal-sweeper-action` GitHub Action is used to delete the resources in the specified project. 
   - This action requires an authentication token, which is stored as a secret in your GitHub repository under the name `METAL_AUTH_TOKEN`. 
-  - The projectID and keepProject parameters for this action are obtained from the `PROJECT_ID` and `Keep_Project` inputs, respectively. 
-  - If `keepProject` is set to '`false`', the project will be deleted.
+  - The `projectID` and `keepProject` parameters for this action are obtained from the `PROJECT_ID` and `Keep_Project` inputs, respectively. 
+  - If `keepProject` is set to '`false`', the project will be deleted. Otherwise the project will not be deleted.
 
 ## Workflow Logs
 The workflow logs can be viewable from `Repo > Actions` tab

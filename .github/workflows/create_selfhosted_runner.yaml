@@ -8,7 +8,15 @@ name: 'Equinix-Metal-Selfhosted-Runner-Setup'
 
 on:
   workflow_dispatch:
-
+    inputs:
+      Clean_Up:
+        description: 'Cleanup the project after the workflow is completed'     
+        required: true
+        default: 'false'
+      Keep_Project:
+        description: 'Keep the Project'     
+        required: true
+        default: 'true'
 env:
   PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
   PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
@@ -41,11 +49,9 @@ jobs:
             $ ./config.sh --url https://github.com/chefgs/linktoqr --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
             # Last step, run it!
             $ ./run.sh
-
-#    - name: SSH into Metal Device and Display CloudInit Logs
-#      run: |
-#        ssh -o StrictHostKeyChecking=no -tt root@$${{ steps.metal-device.outputs.ipaddress }} 'sudo cat /var/log/cloud-init-output.log && exit'
+            
     - name: Delete temporary project & device
+      if: ${{ github.event.inputs.Clean_Up }} == 'true'
       uses: equinix-labs/metal-sweeper-action@main
       with:
         authToken: ${{ secrets.METAL_AUTH_TOKEN }}

@@ -16,7 +16,7 @@ jobs:
     - name: Print ENV vars
       run: |
         export GITHUB_SHA=$(echo $GITHUB_SHA)
-        
+
         echo "GitHub SHA: $GITHUB_SHA"
         echo "GitHub Ref: $GITHUB_REF"
         echo "GitHub Event Name: $GITHUB_EVENT_NAME"
@@ -43,6 +43,7 @@ jobs:
       uses: equinix-labs/metal-project-action@main
       with:
         userToken: ${{ secrets.METAL_AUTH_TOKEN }}
+        projectName: "$GITHUB_SHA"
 
     - name: Create device in temporary project
       id: metal-device

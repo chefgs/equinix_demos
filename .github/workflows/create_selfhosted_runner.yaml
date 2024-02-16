@@ -9,8 +9,8 @@ name: 'Equinix-Metal-Selfhosted-Runner-Setup'
 on:
   workflow_dispatch:
     inputs:
-      Clean_Up:
-        description: 'Cleanup the project after the workflow is completed'     
+      Clean_Up_Device:
+        description: 'Cleanup the Metal Device'     
         required: true
         default: 'false'
       Keep_Project:
@@ -51,7 +51,7 @@ jobs:
             $ ./run.sh
             
     - name: Delete temporary project & device
-      if: ${{ github.event.inputs.Clean_Up }} == 'true'
+      if: ${{ github.event.inputs.Clean_Up_Device }} == 'true'
       uses: equinix-labs/metal-sweeper-action@main
       with:
         authToken: ${{ secrets.METAL_AUTH_TOKEN }}

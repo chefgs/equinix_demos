@@ -51,7 +51,7 @@ jobs:
             $ ./run.sh
             
     - name: Delete temporary project & device
-      if: ${{ github.event.inputs.Clean_Up_Device }} == 'true'
+      if: ${{ github.event.inputs.Clean_Up_Device == 'true' }}
       uses: equinix-labs/metal-sweeper-action@main
       with:
         authToken: ${{ secrets.METAL_AUTH_TOKEN }}

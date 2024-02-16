@@ -10,8 +10,8 @@ on:
   workflow_dispatch:
 
 env:
-  PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
   PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
+  PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
 
 jobs:
   create-self-hosted-runner:
@@ -41,7 +41,7 @@ jobs:
             $ ./config.sh --url https://github.com/chefgs/linktoqr --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
             # Last step, run it!
             $ ./run.sh
-            
+
 #    - name: SSH into Metal Device and Display CloudInit Logs
 #      run: |
 #        ssh -o StrictHostKeyChecking=no -tt root@$${{ steps.metal-device.outputs.ipaddress }} 'sudo cat /var/log/cloud-init-output.log && exit'
@@ -49,8 +49,8 @@ jobs:
       uses: equinix-labs/metal-sweeper-action@main
       with:
         authToken: ${{ secrets.METAL_AUTH_TOKEN }}
-        projectID: ${{ steps.metal-project.outputs.projectID }}
-        keepProject: false
+        projectID: ${{ env.PROJECT_ID }}
+        keepProject: true
 
 # We have to go to the respective github repo in which we need to setup the selfhosted runner
 # Create new runner and then copy the runner setup script available in new runner setup page

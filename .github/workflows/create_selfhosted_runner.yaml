@@ -43,7 +43,7 @@ jobs:
       uses: equinix-labs/metal-project-action@main
       with:
         userToken: ${{ secrets.METAL_AUTH_TOKEN }}
-        projectName: "${{ env.GITHUB_SHA }}
+        projectName: ${{ github.sha }}
 
     - name: Create device in temporary project
       id: metal-device

@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  manage-metal-project-device:
+  create-self-hosted-runner:
     runs-on: ubuntu-latest
     steps:
     - name: Create temporary project

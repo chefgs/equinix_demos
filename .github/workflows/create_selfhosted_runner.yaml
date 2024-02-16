@@ -56,7 +56,7 @@ jobs:
       with:
         authToken: ${{ secrets.METAL_AUTH_TOKEN }}
         projectID: ${{ env.PROJECT_ID }}
-        keepProject: true
+        keepProject: ${{ github.event.inputs.Keep_Project }} 
 
 # We have to go to the respective github repo in which we need to setup the selfhosted runner
 # Create new runner and then copy the runner setup script available in new runner setup page

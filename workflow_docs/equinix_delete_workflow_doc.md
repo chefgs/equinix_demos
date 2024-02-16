@@ -3,7 +3,7 @@
 [![Equinix-Metal-Actions-Demo](https://github.com/chefgs/equinix_demos/actions/workflows/equinix_workflow.yml/badge.svg?branch=main)](https://github.com/chefgs/equinix_demos/actions/workflows/equinix_workflow.yml)
 
 ## Objective of this Workflow
-The provided code is a GitHub Actions workflow named 'Equinix-Metal-Delete-Action'. This workflow is designed to delete resources in a specified project on Equinix Metal. The workflow is manually triggered using the workflow_dispatch event.
+This is a GitHub Actions workflow named 'Equinix-Metal-Delete-Action'. This workflow is designed to delete resources in a specified project on Equinix Metal. The workflow is manually triggered using the workflow_dispatch event.
 
 ## Workflow Pre-requisites
 - We need to get the project `PROJECT_ID` from Equinix Project settings and we will be using it in the project for authentication purposes. 

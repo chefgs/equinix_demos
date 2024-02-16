@@ -3,7 +3,7 @@
 [![Equinix-Metal-Actions-Demo](https://github.com/chefgs/equinix_demos/actions/workflows/equinix_workflow.yml/badge.svg?branch=main)](https://github.com/chefgs/equinix_demos/actions/workflows/equinix_workflow.yml)
 
 ## Objective of this Workflow
-This GitHub Actions workflow, named `'Equinix-Metal-Actions-Demo'`, is designed to create a metal instance in an existing project on Equinix Metal, access the metal instance from a GitHub runner, and display the cloud-init logs. The workflow is triggered manually using the workflow_dispatch event.
+This is a GitHub Actions workflow, named `'Equinix-Metal-Actions-Demo'`. It is designed to create a metal instance in an existing project on Equinix Metal, access the metal instance from a GitHub runner, and display the cloud-init logs. The workflow is triggered manually using the workflow_dispatch event.
 
 ## Workflow Pre-requisites
 We need to get the project `PROJECT_ID` and `PROJECT_TOKEN` from Equinix Project settings and we will be using it in the project for authentication purposes. 

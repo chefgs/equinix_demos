@@ -3,7 +3,7 @@
 [![Equinix-Metal-All_GHActions-Demo](https://github.com/chefgs/equinix_demos/actions/workflows/equinix_all_actions_workflow.yml/badge.svg?branch=main)](https://github.com/chefgs/equinix_demos/actions/workflows/equinix_all_actions_workflow.yml)
 
 ## Objective of this Workflow
-The provided code is a part of a GitHub Actions workflow that manages resources on Equinix Metal.
+The objective of the GitHub Actions workflow is to manages resources on Equinix Metal.
 
 ## Workflow Pre-requisites
 We need to get the metal user API key `METAL_AUTH_TOKEN` from Equinix user settings and we will be using it for the project creation authentication purposes. 

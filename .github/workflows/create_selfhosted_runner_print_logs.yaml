@@ -1,0 +1,77 @@
+name: 'Equinix-Metal-Selfhosted-Runner-Print-Cloudinit-Logs'
+
+on:
+  workflow_dispatch:
+    inputs:
+      Clean_Up_Device:
+        description: 'Cleanup the Metal Device'     
+        required: true
+        default: 'false'
+      Keep_Project:
+        description: 'Keep the Project'     
+        required: true
+        default: 'true'
+env:
+  PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
+  PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
+
+jobs:
+  create-self-hosted-runner:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Runner SSH key and Add to Equinix Project
+      run: |
+        sudo apt update
+        sudo apt install jq -y
+
+        mkdir -p ~/.ssh/
+        # ssh-keygen -q -t rsa -b 4096 -C "gh-user" -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
+        ssh-keygen -q -t rsa -b 4096 -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
+        SSH_PUB_KEY=`cat ~/.ssh/id_rsa.pub`
+
+        jq_out=`jq -n --arg sshpubkey "$SSH_PUB_KEY" '{"label": "runner ssh key", "key": $sshpubkey}'`
+
+        curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: ${{ env.PROJECT_TOKEN }}" "https://api.equinix.com/metal/v1/projects/${{ env.PROJECT_ID }}/ssh-keys" -d "$jq_out"
+
+    - name: Create metal device in project
+      id: metal-device
+      uses: equinix-labs/metal-device-action@main
+      continue-on-error: true
+      with:
+        metal_auth_token: ${{ env.PROJECT_TOKEN }}
+        metal_project_id: ${{ env.PROJECT_ID }}
+        metro: da
+        plan: m3.small.x86
+        os: ubuntu_22_04
+        user_data: |
+            #!/bin/bash
+            # Create a folder
+            $ mkdir actions-runner && cd actions-runner
+            # Download the latest runner package
+            $ curl -o actions-runner-linux-x64-2.313.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.313.0/actions-runner-linux-x64-2.313.0.tar.gz
+            # Optional: Validate the hash
+            $ echo "56910d6628b41f99d9a1c5fe9df54981ad5d8c9e42fc14899dcc177e222e71c4  actions-runner-linux-x64-2.313.0.tar.gz" | shasum -a 256 -c
+            # Extract the installer
+            $ tar xzf ./actions-runner-linux-x64-2.313.0.tar.gz
+            # Create the runner and start the configuration experience
+            $ ./config.sh --url https://github.com/chefgs/linktoqr --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
+            # Last step, run it!
+            $ ./run.sh
+
+    - name: SSH into Metal Device and Display CloudInit Logs
+      run: |
+        ssh -o StrictHostKeyChecking=no -tt root@${{ steps.metal-device.outputs.ipaddress }} 'sudo cat /var/log/cloud-init-output.log; exit'
+      
+    - name: Delete temporary project & device
+      if: ${{ github.event.inputs.Clean_Up_Device == 'true' }}
+      uses: equinix-labs/metal-sweeper-action@main
+      with:
+        authToken: ${{ secrets.METAL_AUTH_TOKEN }}
+        projectID: ${{ env.PROJECT_ID }}
+        keepProject: ${{ github.event.inputs.Keep_Project }} 
+
+# We have to go to the respective github repo in which we need to setup the selfhosted runner
+# Create new runner and then copy the runner setup script available in new runner setup page
+# Paste it into the user_data section of the metal device creation step
+# Finally use the workflow syntax runs-on: self-hosted to run the workflow in metal self hosted instance. 
+# Finally delete the project, as it is demo. In case of real-time scenario skip the deletion part in this workflow

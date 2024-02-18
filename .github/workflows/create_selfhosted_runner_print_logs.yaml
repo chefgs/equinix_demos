@@ -55,7 +55,9 @@ jobs:
             tar xzf ./actions-runner-linux-x64-2.313.0.tar.gz
             # Create the runner and start the configuration experience
             ./config.sh --url https://github.com/chefgs/linktoqr --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
-            # Last step, run it!
+
+            # Last step, create service using svc.sh and run it!
+            # Otherwise run the runner using run.sh
             ./run.sh
 
     - name: SSH into Metal Device and Display CloudInit Logs

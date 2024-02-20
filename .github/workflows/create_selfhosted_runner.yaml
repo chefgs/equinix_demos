@@ -17,6 +17,10 @@ on:
         description: 'Keep the Project'     
         required: true
         default: 'true'
+      Repo_Name:
+        description: 'Repo Name to setup selfhosted runner'     
+        required: true
+        default: 'linktoqr'
 env:
   PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
   PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
@@ -46,9 +50,9 @@ jobs:
             # Extract the installer
             tar xzf ./actions-runner-linux-x64-2.313.0.tar.gz
             # Create the runner and start the configuration experience
-            ./config.sh --url https://github.com/chefgs/linktoqr --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
+            ./config.sh --unattended --url https://github.com/chefgs/${{ github.event.inputs.Repo_Name }} --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
             # Last step, run it!
-            ./run.sh
+            ./run.sh &
             
     - name: Delete temporary project & device
       if: ${{ github.event.inputs.Clean_Up_Device == 'true' }}

@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: Create temporary project
       id: metal-project
-      uses: equinix-labs/metal-project-action@0.14.1
+      uses: equinix-labs/metal-project-action@v0.14.1
       with:
         userToken: ${{ secrets.METAL_AUTH_TOKEN }}
     - name: Use the Project SSH Key outputs (display it)

@@ -29,3 +29,40 @@ The comments at the end of the workflow file provide additional We can use the i
 - Creating a new runner, 
 - Copying the runner setup script, pasting it into the user_data section of the device creation step
 - Finally use the `runs-on: self-hosted` syntax in the workflow file to run the workflow on the self-hosted runner.
+
+---
+
+## Equinix-Metal-Selfhosted-Runner-Setup
+This GitHub Actions workflow is designed to create a device in a temporary project on Equinix Metal, run a self-hosted runner script for a specific GitHub repository, and optionally delete the device and the project.
+
+## Workflow Trigger
+The workflow is manually triggered using the workflow_dispatch event. It has three inputs:
+
+`Keep_the_Device`: Determines whether the device should be kept after the workflow runs. Required, default is 'true'.
+`Keep_Project`: Determines whether the project should be kept after the workflow runs. Required, default is 'true'.
+`Repo_Name`: The name of the repository to set up the self-hosted runner. Required, default is 'linktoqr'.
+
+## Environment Variables
+The workflow uses two environment variables:
+
+`PROJECT_TOKEN`: The project token, stored as a secret in the GitHub repository.
+`PROJECT_ID`: The project ID, stored as a secret in the GitHub repository.
+
+## Jobs
+The workflow consists of a single job, `create-self-hosted-runner`, which runs on the latest version of Ubuntu. 
+
+This job has two steps:
+
+### Step 1: Create Metal Device in Project
+- This step uses the `equinix-labs/metal-device-action@main` GitHub Action to create a new device in the specified project. 
+
+- The device is created in the '`da`' metro with the '`c3.small.x86`' plan and the '`ubuntu_22_04`' operating system. 
+
+- The `user_data` parameter is used to provide a script that is run on the device when it is created. This script downloads, configures, and runs a GitHub Actions self-hosted runner for the specified repository.
+
+### Step 2: Delete Temporary Project & Device
+- This step uses the `equinix-labs/metal-sweeper-action@main` GitHub Action to delete the device and optionally the project.
+
+- The action requires an authentication token and the project ID from the environment variables. 
+
+- The `keepProject` parameter is obtained from the `Keep_Project` input. If `Keep_the_Device` is set to 'false', the device will be and optionally the project will not be deleted if keep_project is set to `true`.

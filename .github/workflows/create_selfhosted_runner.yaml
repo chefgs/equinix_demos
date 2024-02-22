@@ -37,7 +37,7 @@ jobs:
         metal_auth_token: ${{ env.PROJECT_TOKEN }}
         metal_project_id: ${{ env.PROJECT_ID }}
         metro: da
-        plan: m3.small.x86
+        plan: c3.small.x86
         os: ubuntu_22_04
         user_data: |
             #!/bin/bash

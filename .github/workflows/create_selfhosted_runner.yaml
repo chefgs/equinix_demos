@@ -1,4 +1,4 @@
-# This GitHub Actions workflow, named 'Equinix-Metal-Actions-All-Demo', 
+# This GitHub Actions workflow, named 'Equinix-Metal-Selfhosted-Runner-Setup', 
 # It is designed to create a temporary project on Equinix Metal, 
 # Creates a device in that project and run selfhosted runner script for linktoqr github repo
 # Finally delete the project and device. 

@@ -61,8 +61,10 @@ jobs:
             export RUNNER_ALLOW_RUNASROOT="1"
 
             # Get the runner registration token for the repository
-            sudo apt-get install jq -y
-            
+            sudo apt-get update && sudo apt-get install jq -y
+
+            jq --version
+
             curl -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \

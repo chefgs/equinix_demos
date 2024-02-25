@@ -11,6 +11,10 @@ on:
         description: 'Keep the Project'     
         required: true
         default: 'true'
+      Repo_Name:
+        description: 'Repo Name to setup selfhosted runner'     
+        required: true
+        default: 'linktoqr'
 env:
   PROJECT_TOKEN: ${{ secrets.METAL_PROJECT_TOKEN }}
   PROJECT_ID: ${{ secrets.METAL_PROJECT_ID }}
@@ -61,7 +65,6 @@ jobs:
 
             # Create the runner and start the configuration experience
             ./config.sh --unattended --url https://github.com/chefgs/${{ github.event.inputs.Repo_Name }} --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
-            echo "runner successfully configured"
 
             if [ $? -eq 0 ]; then
                 echo "Runner setup successfully completed"

@@ -49,6 +49,11 @@ jobs:
             echo "56910d6628b41f99d9a1c5fe9df54981ad5d8c9e42fc14899dcc177e222e71c4  actions-runner-linux-x64-2.313.0.tar.gz" | shasum -a 256 -c
             # Extract the installer
             tar xzf ./actions-runner-linux-x64-2.313.0.tar.gz
+
+            # Export the runner environment variable RUNNER_ALLOW_RUNASROOT="1"
+            # This is to avoid the error "must not run as root" when running the runner as root
+            export RUNNER_ALLOW_RUNASROOT="1"
+
             # Create the runner and start the configuration experience
             ./config.sh --unattended --url https://github.com/chefgs/${{ github.event.inputs.Repo_Name }} --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
             

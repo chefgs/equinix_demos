@@ -54,6 +54,11 @@ jobs:
             # Extract the installer
             tar xzf ./actions-runner-linux-x64-2.313.0.tar.gz
             echo "runner successfully extracted"
+
+            # Export the runner environment variable RUNNER_ALLOW_RUNASROOT="1"
+            # This is to avoid the error "must not run as root" when running the runner as root
+            export RUNNER_ALLOW_RUNASROOT="1"
+
             # Create the runner and start the configuration experience
             ./config.sh --unattended --url https://github.com/chefgs/${{ github.event.inputs.Repo_Name }} --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
             echo "runner successfully configured"

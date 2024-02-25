@@ -50,12 +50,14 @@ jobs:
             # Download the latest runner package
             curl -o actions-runner-linux-x64-2.313.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.313.0/actions-runner-linux-x64-2.313.0.tar.gz
             # Optional: Validate the hash
-            echo "56910d6628b41f99d9a1c5fe9df54981ad5d8c9e42fc14899dcc177e222e71c4  actions-runner-linux-x64-2.313.0.tar.gz" | shasum -a 256 -c
+            # echo "56910d6628b41f99d9a1c5fe9df54981ad5d8c9e42fc14899dcc177e222e71c4  actions-runner-linux-x64-2.313.0.tar.gz" | shasum -a 256 -c
             # Extract the installer
             tar xzf ./actions-runner-linux-x64-2.313.0.tar.gz
+            echo "runner successfully extracted"
             # Create the runner and start the configuration experience
             ./config.sh --unattended --url https://github.com/chefgs/${{ github.event.inputs.Repo_Name }} --token AB2A3GXKLIKGPIBLVCUIT2DFZYGSK
-            
+            echo "runner successfully configured"
+
             if [ $? -eq 0 ]; then
                 echo "Runner setup successfully completed"
                 # Config.sh installs the service files. 

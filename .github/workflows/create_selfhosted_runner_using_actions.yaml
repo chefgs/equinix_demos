@@ -1,0 +1,62 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Project:
+    name: "Create Project"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: metal-project-action
+        id: metal-project-action
+        uses: equinix-labs/metal-project-action@v0.14.0
+        with:
+          projectName: "metal-runner-demo"
+          userToken: ${{ secrets.METAL_AUTH_TOKEN }}
+
+    outputs:
+      projectID: ${{ steps.metal-project-action.outputs.projectID }}
+
+  Runner:
+    name: "Create Runner"
+    needs: Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: metal-runner-action
+        uses: equinix-labs/metal-action-runner@v0.1.1
+        with:
+          github_token: ${{ secrets.GHA_PAT_KEY }}
+          metal_auth_token: ${{ secrets.METAL_AUTH_TOKEN }}
+          metal_project_id: ${{ needs.Project.outputs.projectID }}
+          metro: "da"
+          plan: "c3.small.x86"
+          os: "ubuntu_20_04"
+
+  Demo:
+    name: "Demo Action"
+    needs: Runner
+    runs-on: self-hosted
+
+    steps:
+      - run: |
+          echo "Hello, Equinix Metal!"
+          echo "This is runner: ${{ runner.name }}"
+          echo "Running on ${{ runner.arch }} ${{ runner.os }}"
+
+  Cleanup:
+    name: "Cleanup"
+    runs-on: ubuntu-latest
+    needs: [Demo, Project]
+
+    steps:
+      - name: metal-sweeper-action
+        uses: equinix-labs/metal-sweeper-action@v0.6.0
+        with:
+          authToken: ${{ secrets.METAL_AUTH_TOKEN }}
+          projectID: ${{ needs.Project.outputs.projectID  }}
+          keepProject: false

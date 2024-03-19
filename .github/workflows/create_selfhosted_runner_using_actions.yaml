@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: 'Equinix-Metal-Selfhosted-Runner-Actions'
 
 on:
   push:

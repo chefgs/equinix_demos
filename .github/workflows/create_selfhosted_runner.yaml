@@ -4,7 +4,7 @@
 # Finally delete the project and device. 
 
 # The workflow is triggered manually using the workflow_dispatch event.
-name: 'Equinix-Metal-Selfhosted-Runner-Setup'
+name: 'Equinix-Metal-Selfhosted-Runner-Setup-Using-Script'
 
 on:
   workflow_dispatch:
